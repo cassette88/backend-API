@@ -26,6 +26,57 @@ async function getDB(){
 }
 
 
+// store data
+let forecast = {}
+
+
+// weather API
+// TODO axios error handling
+async function getWeather(){
+    // let forecast = {}
+ 
+     weather = await axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=39.95&lon=-75.15&units=imperial&appid=f89b62f54f1ca1ebdebb9f900a62be83`)
+ 
+     forecast['temp'] = `Current temperature: ${Math.floor(weather.data.current.temp)} degrees`
+     forecast['feels_like'] = `Feels like: ${Math.floor(weather.data.current.feels_like)} degrees`
+     forecast['wind_spped'] =`Wind speeds is currently: ${Math.floor(weather.data.current.wind_speed)} mph`
+     forecast['humidity'] = `Humidity is ${Math.floor(weather.data.current.humidity)} percent`
+     forecast['weather'] = weather.data.current.weather[0].main
+     forecast['description'] = weather.data.current.weather[0].description
+     var date = new Date();
+     forecast['date'] = date.toISOString();
+ 
+    // forecast ['bikes'] = await getBikes()
+     stations = await getBikes()
+ 
+     data = {
+         at: forecast.date,
+       //  stations: _.flatten(forecast.bikes),
+         stations: stations,
+         weather: forecast
+     }
+ 
+  //   console.log (data)
+    saveData(data)
+    // bikesAndWeather[0] = forecast
+    // console.log(bikesAndWeather)
+ }
+
+ // call bike API
+// TODO: error handling
+async function getBikes() {
+    try {
+    const response = await axios.get(`https://kiosks.bicycletransit.workers.dev/phl`)
+    let bikes = response.data.features
+    //console.log(bikes)
+    //bikesAndWeather.push(bikes)
+    return bikes
+    } catch (error){
+     console.log(error)
+
+    }
+}
+
 async function saveData(info){
 
     let bikes = client.db("bikes")
@@ -38,6 +89,9 @@ async function saveData(info){
     console.log(`A doc was inserted with this Id: ${result.insertedId}`)
   //  console.log(data)
 }
+
+
+
 
 app.get('/', (req, res) => {
    // res.send('Hello World')
@@ -151,54 +205,9 @@ app.listen(port, () => {
 })
 
 
-// store data
-let forecast = {}
 
-// call bike API
 
-async function getBikes() {
-    try {
-    const response = await axios.get(`https://kiosks.bicycletransit.workers.dev/phl`)
-    let bikes = response.data.features
-    //console.log(bikes)
-    //bikesAndWeather.push(bikes)
-    return bikes
-    } catch (error){
-     console.log(error)
 
-    }
-}
-
-// weather API
-async function getWeather(){
-   // let forecast = {}
-
-    weather = await axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=39.95&lon=-75.15&units=imperial&appid=f89b62f54f1ca1ebdebb9f900a62be83`)
-
-    forecast['temp'] = `Current temperature: ${Math.floor(weather.data.current.temp)} degrees`
-    forecast['feels_like'] = `Feels like: ${Math.floor(weather.data.current.feels_like)} degrees`
-    forecast['wind_spped'] =`Wind speeds is currently: ${Math.floor(weather.data.current.wind_speed)} mph`
-    forecast['humidity'] = `Humidity is ${Math.floor(weather.data.current.humidity)} percent`
-    forecast['weather'] = weather.data.current.weather[0].main
-    forecast['description'] = weather.data.current.weather[0].description
-    var date = new Date();
-    forecast['date'] = date.toISOString();
-
-   // forecast ['bikes'] = await getBikes()
-    stations = await getBikes()
-
-    data = {
-        at: forecast.date,
-      //  stations: _.flatten(forecast.bikes),
-        stations: stations,
-        weather: forecast
-    }
-
- //   console.log (data)
-   saveData(data)
-   // bikesAndWeather[0] = forecast
-   // console.log(bikesAndWeather)
-}
 
 // save data to mongo
 
