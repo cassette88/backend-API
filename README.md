@@ -1,30 +1,41 @@
-api 1
+# Overview
+Indego is a bike sharing program launched in Philadelphia. A design company in the city created a challenge for developers. The task was to build an app that saves the results from the bicycle API to a MongoDB database at a specific interval. The data can be queried via 3 APIs:
 
-http://localhost:3000/api/v1/stations?at=2022-08-14T14:26:48.369Z
+- Snapshot of all stations at a specified time
 
-api 2
+- Snapshot of one station at a specific time
 
-http://localhost:3000/api/v1/station/3004?at=2022-08-14T14:26:48.369Z
+- Snapshots of one station over a range of times
 
-api 3
+# Functions  
 
-http://localhost:3000/api/v1/stations/3004?from=2022-08-14T14:26:48.369Z&to=2022-08-14T14:29:06.250Z
+## Start Application 
+- app.listen
 
+## getDB
+-  Establishes a connection with the database
 
-&frequency=daily
+## getWeather
+- Fetches the current weather
 
-{at: {$gte:2022-08-14T14:26:48.369Z, $lt:2022-08-14T14:29:06.250Z}}
+## getBikes
+- Fetches bike availability from the indego API
 
-2022-08-14T14:26:48.369Z
+## saveData
+- Saves historical bicycle data
 
-2022-08-14T14:29:06.250Z
+## API Routes:
 
-        2022-08-14T14:26:48.369Z
+##### Snapshot of all stations at a specified time
 
-date : "2022-08-13T17:13:24.640Z"
+* app.get /api/v1/stations
 
-date : "2022-08-13T18:17:27.259Z"
+#####  Snapshot of one station at a specific time
+* app.get /api/v1/station/:id
 
-date : "2022-08-13T19:41:43.993Z"
-
-date : "2022-08-13T19:59:30.059Z"
+#####  Snapshots of one station over a range of times
+* app.get /api/v1/stations/:id
+    
+<br/><br/>
+To Do:
+Add tests
