@@ -5,6 +5,7 @@ const uri = ''
 
 let client;
 
+// establish a connection with the database
 async function startDb(){ 
 
 client = new MongoClient(uri);
@@ -17,6 +18,8 @@ client = new MongoClient(uri);
         console.log (err)
     }
 }
+
+// share the database connection with other parts of the app
 
 async function getDb(){
     if(!client){
